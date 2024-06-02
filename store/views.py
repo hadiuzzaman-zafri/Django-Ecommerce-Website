@@ -46,9 +46,14 @@ def updateItem(request):
 
     print('Action:', action)
     print('productId:', productId)
-
     customer = request.user.customer
-    product = Product.objects.get(id=productId)
+    try:
+        
+        product = Product.objects.get(id=productId)
+    except Product.DoesNotExist:
+        product=None
+    
+
     order, created = Order.objects.get_or_create(customer=customer, complete=False)
 
     orderItem, created = OrderItem.objects.get_or_create(order=order, product=product)
@@ -110,7 +115,7 @@ def processOrder(request):
         #     )
     
 
-    
+
     total = float(data['form']['total'])
     order.transaction_id = transaction_id
 
